@@ -16,19 +16,22 @@ namespace PluginDev
             var serviceFactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             var OrganizationService = serviceFactory.CreateOrganizationService(context.InitiatingUserId);
 
-            if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity)
+            if(context.PrimaryEntityName == "account" && context.MessageName == "Create")
             {
-                Entity entity = (Entity)context.InputParameters["Target"];
-                if (entity.LogicalName == "account")
-                {
-                    TracingService.Trace("Account Entity is being created");
-                    var accountName = entity.Attributes["name"].ToString();
-                    TracingService.Trace("Account Name: " + accountName);
-                    var accountId = OrganizationService.Create(entity);
-                    TracingService.Trace("Account Created with Id: " + accountId);
-                    var account = OrganizationService.Retrieve("account", accountId, new Microsoft.Xrm.Sdk.Query.ColumnSet(true));
-                    TracingService.Trace("Account Retrieved with Id: " + account.Id);
-                }
+                Entity accountRecord = OrganizationService.Retrieve(context.PrimaryEntityName, context.PrimaryEntityId, new Microsoft.Xrm.Sdk.Query.ColumnSet("name","telephone1"));
+                string accountName = accountRecord.GetAttributeValue<string>("name");
+                string PhoneNumber = accountRecord.GetAttributeValue<string>("telephone1");
+                Entity contactRecord = new Entity("contact");
+                contactRecord["fullname"] = accountName;
+                contactRecord["telephone1"] = PhoneNumber;
+                contactRecord["parentcustomerid"] = new EntityReference("account", context.PrimaryEntityId);
+                contactRecord["accountrolecode"] = new OptionSetValue(2);
+                contactRecord["creditlimit"] = new Money(100);
+                contactRecord["lastonholdtime"] = new DateTime(2024,09,18);
+                contactRecord["donotphone"] = true;
+                contactRecord["numberofchildern"] = 0;
+               Guid contactId =  OrganizationService.Create(contactRecord);
+
             }
         }
     }
