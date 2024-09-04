@@ -18,12 +18,13 @@ namespace PluginDev
 
             if(context.PrimaryEntityName == "account" && context.MessageName == "Create")
             {
+                TracingService.Trace("Enter a method Passed the test of context.Primaryname = account");
                 //Read
                 Entity accountRecord = OrganizationService.Retrieve(context.PrimaryEntityName, context.PrimaryEntityId, new Microsoft.Xrm.Sdk.Query.ColumnSet("name","telephone1"));
                 string accountName = accountRecord.Contains("name") ? accountRecord.GetAttributeValue<string>("name") : "";
                 string PhoneNumber = accountRecord.Contains("telephone1") ?  accountRecord.GetAttributeValue<string>("telephone1"): "";
                 int customerTypeCode = accountRecord.Contains("customertypecode") ? accountRecord.GetAttributeValue<OptionSetValue>("customertypecode").Value : 0;
-
+                TracingService.Trace("Account Name: {0} and Phone Number: {1}", accountName, PhoneNumber);
                 //Create Operation
                 Entity contactRecord = new Entity("contact");
                 contactRecord["fullname"] = accountName;
@@ -35,6 +36,9 @@ namespace PluginDev
                 contactRecord["donotphone"] = true;
                 contactRecord["numberofchildern"] = 0;
                 Guid contactId =  OrganizationService.Create(contactRecord);
+
+
+                TracingService.Trace("Contact Created with ID: {0}", contactId);
 
             }
         }
