@@ -18,9 +18,12 @@ namespace PluginDev
 
             if(context.PrimaryEntityName == "account" && context.MessageName == "Create")
             {
+                //Read
                 Entity accountRecord = OrganizationService.Retrieve(context.PrimaryEntityName, context.PrimaryEntityId, new Microsoft.Xrm.Sdk.Query.ColumnSet("name","telephone1"));
                 string accountName = accountRecord.GetAttributeValue<string>("name");
                 string PhoneNumber = accountRecord.GetAttributeValue<string>("telephone1");
+
+                //Create Operation
                 Entity contactRecord = new Entity("contact");
                 contactRecord["fullname"] = accountName;
                 contactRecord["telephone1"] = PhoneNumber;
