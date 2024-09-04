@@ -20,8 +20,9 @@ namespace PluginDev
             {
                 //Read
                 Entity accountRecord = OrganizationService.Retrieve(context.PrimaryEntityName, context.PrimaryEntityId, new Microsoft.Xrm.Sdk.Query.ColumnSet("name","telephone1"));
-                string accountName = accountRecord.GetAttributeValue<string>("name");
-                string PhoneNumber = accountRecord.GetAttributeValue<string>("telephone1");
+                string accountName = accountRecord.Contains("name") ? accountRecord.GetAttributeValue<string>("name") : "";
+                string PhoneNumber = accountRecord.Contains("telephone1") ?  accountRecord.GetAttributeValue<string>("telephone1"): "";
+                int customerTypeCode = accountRecord.Contains("customertypecode") ? accountRecord.GetAttributeValue<OptionSetValue>("customertypecode").Value : 0;
 
                 //Create Operation
                 Entity contactRecord = new Entity("contact");
