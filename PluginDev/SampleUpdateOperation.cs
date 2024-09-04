@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,8 @@ namespace PluginDev
                 int accountRating = accountRecord.Contains("accountratingcode") ? accountRecord.GetAttributeValue<OptionSetValue>("accountratingcode").Value : 100;
                 int numberOfEmployees = accountRecord.Contains("numberofemployee") ?  accountRecord.GetAttributeValue<OptionSetValue>("numberofemployee").Value : 0;
                 Entity accountToUpdate = new Entity("account");
-                accountToUpdate.Id = context.PrimaryEntityId;
+                accountToUpdate.Id = accountRecord.Id;
+                int creditLimit = 50;
                 if(accountRating == 1 && numberOfEmployees <10)
                 {
                     accountToUpdate["revenue"] = new Money(50);
@@ -34,7 +36,18 @@ namespace PluginDev
 
                 }
                 OrganizationService.Update(accountToUpdate);
-                OrganizationService.Delete("account",context.PrimaryEntityId);
+                //OrganizationService.Delete("account",context.PrimaryEntityId);
+
+
+                QueryExpression queryExpression = new QueryExpression("contact");
+                queryExpression.ColumnSet = new ColumnSet("fullname", "telephone1", "parentcustomerid","creditlimit");
+                queryExpression.Criteria.AddCondition("parentcustomerid", ConditionOperator.Equal, context.PrimaryEntityId);
+
+                EntityCollection contacts = OrganizationService.RetrieveMultiple(queryExpression);
+
+
+
+
 
             }
         }
