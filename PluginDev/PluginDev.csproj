@@ -114,7 +114,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SasmpleCreateReadOperation.cs" />
+    <Compile Include="SampleUpdateOperation.cs" />
+    <Compile Include="SampleCreateReadOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

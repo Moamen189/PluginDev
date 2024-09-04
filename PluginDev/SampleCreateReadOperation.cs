@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PluginDev
 {
-    public class SasmpleCreateReadOperation : IPlugin
+    public class SampleCreateReadOperation : IPlugin
     {
         public void Execute(IServiceProvider serviceProvider)
         {
@@ -30,7 +30,7 @@ namespace PluginDev
                 contactRecord["lastonholdtime"] = new DateTime(2024,09,18);
                 contactRecord["donotphone"] = true;
                 contactRecord["numberofchildern"] = 0;
-               Guid contactId =  OrganizationService.Create(contactRecord);
+                Guid contactId =  OrganizationService.Create(contactRecord);
 
             }
         }
