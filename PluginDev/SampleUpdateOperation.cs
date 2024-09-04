@@ -34,6 +34,7 @@ namespace PluginDev
 
                 }
                 OrganizationService.Update(accountToUpdate);
+                OrganizationService.Delete("account",context.PrimaryEntityId);
 
             }
         }
